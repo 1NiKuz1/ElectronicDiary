@@ -1,0 +1,168 @@
+USE [EG_base]
+GO
+/****** Object:  Table [dbo].[Cabinets]    Script Date: 06.03.2023 18:47:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Cabinets](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[num_cabinet] [int] NOT NULL,
+	[name_cabinet] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_Cabinets] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Classes]    Script Date: 06.03.2023 18:47:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Classes](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[num_class] [nvarchar](10) NOT NULL,
+	[classroom_teacher_id] [int] NULL,
+	[year] [int] NOT NULL,
+ CONSTRAINT [PK_Classes] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Journal]    Script Date: 06.03.2023 18:47:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Journal](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[student_id] [int] NOT NULL,
+	[subject_id] [int] NOT NULL,
+	[assessment] [int] NOT NULL,
+	[date] [date] NOT NULL,
+ CONSTRAINT [PK_Journal] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Roles]    Script Date: 06.03.2023 18:47:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Roles](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[role_name] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_Roles] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Schedule]    Script Date: 06.03.2023 18:47:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Schedule](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[teacher_id] [int] NOT NULL,
+	[subject_id] [int] NOT NULL,
+	[class_id] [int] NOT NULL,
+	[cabinet_id] [int] NOT NULL,
+	[time] [time](7) NOT NULL,
+ CONSTRAINT [PK_Schedule] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Students]    Script Date: 06.03.2023 18:47:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Students](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[FIO] [nvarchar](50) NOT NULL,
+	[class_id] [int] NOT NULL,
+	[role_id] [int] NOT NULL,
+ CONSTRAINT [PK_Students] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Subjects]    Script Date: 06.03.2023 18:47:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Subjects](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[subject_name] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_Subjects] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Teachers]    Script Date: 06.03.2023 18:47:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Teachers](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[FIO] [nvarchar](50) NOT NULL,
+	[cabinet_id] [int] NULL,
+	[role_id] [int] NOT NULL,
+ CONSTRAINT [PK_Teachers] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Journal]  WITH CHECK ADD  CONSTRAINT [FK_Journal_Students] FOREIGN KEY([student_id])
+REFERENCES [dbo].[Students] ([id])
+GO
+ALTER TABLE [dbo].[Journal] CHECK CONSTRAINT [FK_Journal_Students]
+GO
+ALTER TABLE [dbo].[Journal]  WITH CHECK ADD  CONSTRAINT [FK_Journal_Subjects] FOREIGN KEY([subject_id])
+REFERENCES [dbo].[Subjects] ([id])
+GO
+ALTER TABLE [dbo].[Journal] CHECK CONSTRAINT [FK_Journal_Subjects]
+GO
+ALTER TABLE [dbo].[Schedule]  WITH CHECK ADD  CONSTRAINT [FK_Schedule_Cabinets] FOREIGN KEY([cabinet_id])
+REFERENCES [dbo].[Cabinets] ([id])
+GO
+ALTER TABLE [dbo].[Schedule] CHECK CONSTRAINT [FK_Schedule_Cabinets]
+GO
+ALTER TABLE [dbo].[Schedule]  WITH CHECK ADD  CONSTRAINT [FK_Schedule_Classes] FOREIGN KEY([class_id])
+REFERENCES [dbo].[Classes] ([id])
+GO
+ALTER TABLE [dbo].[Schedule] CHECK CONSTRAINT [FK_Schedule_Classes]
+GO
+ALTER TABLE [dbo].[Schedule]  WITH CHECK ADD  CONSTRAINT [FK_Schedule_Subjects] FOREIGN KEY([subject_id])
+REFERENCES [dbo].[Subjects] ([id])
+GO
+ALTER TABLE [dbo].[Schedule] CHECK CONSTRAINT [FK_Schedule_Subjects]
+GO
+ALTER TABLE [dbo].[Schedule]  WITH CHECK ADD  CONSTRAINT [FK_Schedule_Teachers] FOREIGN KEY([teacher_id])
+REFERENCES [dbo].[Teachers] ([id])
+GO
+ALTER TABLE [dbo].[Schedule] CHECK CONSTRAINT [FK_Schedule_Teachers]
+GO
+ALTER TABLE [dbo].[Students]  WITH CHECK ADD  CONSTRAINT [FK_Students_Classes] FOREIGN KEY([class_id])
+REFERENCES [dbo].[Classes] ([id])
+GO
+ALTER TABLE [dbo].[Students] CHECK CONSTRAINT [FK_Students_Classes]
+GO
+ALTER TABLE [dbo].[Students]  WITH CHECK ADD  CONSTRAINT [FK_Students_Roles] FOREIGN KEY([role_id])
+REFERENCES [dbo].[Roles] ([id])
+GO
+ALTER TABLE [dbo].[Students] CHECK CONSTRAINT [FK_Students_Roles]
+GO
