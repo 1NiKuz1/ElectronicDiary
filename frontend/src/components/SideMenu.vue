@@ -4,13 +4,41 @@
       <nav class="side-menu__nav">
         <ul class="side-menu__elements">
           <li class="side-menu__el">
-            <button class="side-menu__button" @click="goByRoute('/')">+</button>
+            <button class="side-menu__button" @click="goByRoute('/')">
+              расп
+            </button>
           </li>
           <li class="side-menu__el">
-            <button class="side-menu__button">++</button>
+            <button
+              class="side-menu__button"
+              @click="goByRoute('/edit-schedule')"
+            >
+              арасп
+            </button>
           </li>
           <li class="side-menu__el">
-            <button class="side-menu__button">+-</button>
+            <button
+              class="side-menu__button"
+              @click="goByRoute('/edit-schedule')"
+            >
+              урасп
+            </button>
+          </li>
+          <li class="side-menu__el">
+            <button
+              class="side-menu__button"
+              @click="goByRoute('/edit-schedule')"
+            >
+              сднев
+            </button>
+          </li>
+          <li class="side-menu__el">
+            <button
+              class="side-menu__button"
+              @click="goByRoute('/edit-schedule')"
+            >
+              уднев
+            </button>
           </li>
         </ul>
       </nav>
@@ -23,7 +51,6 @@ export default {
   name: "side-menu",
   methods: {
     goByRoute(route) {
-      this.hideMenu();
       this.$router.push(route);
     },
   },

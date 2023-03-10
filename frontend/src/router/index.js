@@ -1,13 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AppView from "@/views/AppView.vue";
+import EditScheduleView from "@/views/EditScheduleView.vue";
+import ScheduleView from "@/views/ScheduleView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
-      name: "home",
-      component: AppView,
+      name: "schedule",
+      component: ScheduleView,
+    },
+    {
+      path: "/edit-schedule",
+      name: "edit-schedule",
+      component: EditScheduleView,
     },
   ],
 });
