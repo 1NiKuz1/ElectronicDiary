@@ -1,6 +1,6 @@
 <template>
   <div class="content-wrapper">
-    <button @click="showDialog = !showDialog">show/hide</button>
+    <!--<button @click="showDialog = !showDialog">show/hide</button>-->
     <RouterView />
   </div>
   <main-dialog v-model:show="showDialog">
@@ -30,7 +30,7 @@ export default {
 
 <style scoped>
 .content-wrapper {
-  padding-left: 146px;
+  padding: 35px 48px 35px 146px;
 }
 
 @media (max-width: 480px) {
