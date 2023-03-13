@@ -32,7 +32,7 @@ import "primevue/resources/themes/saga-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 
 export default {
-  name: "MyTableComponent",
+  name: "ScheduleView",
   components: {
     DataTable,
     Column,
