@@ -17,27 +17,13 @@
             </button>
           </li>
           <li class="side-menu__el">
-            <button
-              class="side-menu__button"
-              @click="goByRoute('/edit-schedule')"
-            >
-              урасп
-            </button>
-          </li>
-          <li class="side-menu__el">
-            <button
-              class="side-menu__button"
-              @click="goByRoute('/edit-schedule')"
-            >
+            <button class="side-menu__button" @click="goByRoute('/diary')">
               сднев
             </button>
           </li>
           <li class="side-menu__el">
-            <button
-              class="side-menu__button"
-              @click="goByRoute('/edit-schedule')"
-            >
-              уднев
+            <button class="side-menu__button" @click="goByRoute('/journal')">
+              журнал
             </button>
           </li>
         </ul>
