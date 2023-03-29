@@ -33,8 +33,22 @@
 </template>
 
 <script>
+import Dialog from "primevue/dialog";
+import { useAuthStore } from "@/stores/auth";
 export default {
   name: "side-menu",
+  components: {
+    Dialog,
+  },
+
+  setup() {
+    const auth = useAuthStore();
+    const { userData } = auth;
+    return {
+      userData,
+    };
+  },
+
   methods: {
     goByRoute(route) {
       this.$router.push(route);

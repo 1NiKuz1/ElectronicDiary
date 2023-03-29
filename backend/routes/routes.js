@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { showUsers } = require("../controllers/controller.users.js");
+const AuthController = require("../controllers/controller.auth.js");
 
-//Здесь роуты
-
-router.get("/users", showUsers);
+router.post("/api/login", AuthController.login);
+router.post("/api/logout", AuthController.logout);
 
 module.exports = router;
