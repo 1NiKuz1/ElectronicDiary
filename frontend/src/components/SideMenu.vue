@@ -3,53 +3,90 @@
     <div class="side-menu__content">
       <nav class="side-menu__nav">
         <ul class="side-menu__elements">
-          <li class="side-menu__el">
-            <button class="side-menu__button" @click="goByRoute('/')">
-              расп
-            </button>
-          </li>
-          <li class="side-menu__el">
-            <button
-              class="side-menu__button"
-              @click="goByRoute('/edit-schedule')"
+          <template v-if="isLogged">
+            <li
+              class="side-menu__el"
+              v-if="
+                userData.user.role === 'student' ||
+                userData.user.role === 'teacher'
+              "
             >
-              арасп
-            </button>
-          </li>
-          <li class="side-menu__el">
-            <button class="side-menu__button" @click="goByRoute('/diary')">
-              сднев
-            </button>
-          </li>
-          <li class="side-menu__el">
-            <button class="side-menu__button" @click="goByRoute('/journal')">
-              журнал
+              <button class="side-menu__button" @click="goByRoute('/schedule')">
+                расп
+              </button>
+            </li>
+            <li class="side-menu__el" v-if="userData.user.role === 'admin'">
+              <button
+                class="side-menu__button"
+                @click="goByRoute('/edit-schedule')"
+              >
+                арасп
+              </button>
+            </li>
+            <li class="side-menu__el" v-if="userData.user.role === 'student'">
+              <button class="side-menu__button" @click="goByRoute('/diary')">
+                сднев
+              </button>
+            </li>
+            <li class="side-menu__el" v-if="userData.user.role === 'teacher'">
+              <button class="side-menu__button" @click="goByRoute('/journal')">
+                журнал
+              </button>
+            </li>
+            <li class="side-menu__el">
+              <button class="side-menu__button" @click="logout">выход</button>
+            </li>
+          </template>
+          <li class="side-menu__el" v-if="!isLogged">
+            <button class="side-menu__button" @click="isShowDialog = true">
+              вход
             </button>
           </li>
         </ul>
       </nav>
     </div>
   </div>
+  <Dialog v-model:visible="isShowDialog" modal header="Авторизация">
+    <AuthorizationForm @hideDialog="isShowDialog = false" />
+  </Dialog>
 </template>
 
 <script>
 import Dialog from "primevue/dialog";
+import AuthorizationForm from "@/components/forms/AuthorizationForm.vue";
 import { useAuthStore } from "@/stores/auth";
+import { storeToRefs } from "pinia";
 export default {
   name: "side-menu",
   components: {
     Dialog,
+    AuthorizationForm,
   },
 
   setup() {
     const auth = useAuthStore();
     const { userData } = auth;
+    const { isLogged } = storeToRefs(auth);
+    const { logout } = auth;
     return {
       userData,
+      isLogged,
+      logout,
+    };
+  },
+
+  data() {
+    return {
+      isShowDialog: false,
     };
   },
 
   methods: {
+    logout() {
+      this.logout();
+      this.$router.push("/");
+    },
+
     goByRoute(route) {
       this.$router.push(route);
     },
@@ -92,7 +129,7 @@ export default {
   color: var(--color-dark-green);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .side-menu {
     top: auto;
     left: 0;

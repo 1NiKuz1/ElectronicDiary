@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Мар 29 2023 г., 16:34
+-- Время создания: Мар 29 2023 г., 20:40
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -33,6 +33,16 @@ CREATE TABLE `cabinets` (
   `name_cabinet` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Дамп данных таблицы `cabinets`
+--
+
+INSERT INTO `cabinets` (`id`, `num_cabinet`, `name_cabinet`) VALUES
+(1, 1, 'кабинет математики'),
+(2, 2, 'кабинет русского языка'),
+(3, 3, 'кабинет английского языка'),
+(4, 4, 'кабинет литературы');
+
 -- --------------------------------------------------------
 
 --
@@ -41,10 +51,19 @@ CREATE TABLE `cabinets` (
 
 CREATE TABLE `classes` (
   `id` int NOT NULL,
-  `num_class` int NOT NULL,
-  `classroom_teacher_id` int NOT NULL,
+  `name` varchar(10) NOT NULL,
   `year` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `classes`
+--
+
+INSERT INTO `classes` (`id`, `name`, `year`) VALUES
+(1, '1А', 2007),
+(2, '1Б', 2007),
+(3, '1В', 2007),
+(4, '1Г', 2007);
 
 -- --------------------------------------------------------
 
@@ -57,6 +76,24 @@ CREATE TABLE `classes_users` (
   `class_id` int NOT NULL,
   `user_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `classes_users`
+--
+
+INSERT INTO `classes_users` (`id`, `class_id`, `user_id`) VALUES
+(1, 1, 3),
+(2, 1, 4),
+(3, 1, 5),
+(4, 2, 6),
+(5, 2, 7),
+(6, 2, 8),
+(7, 3, 9),
+(8, 3, 10),
+(9, 3, 11),
+(10, 4, 12),
+(11, 4, 13),
+(12, 4, 14);
 
 -- --------------------------------------------------------
 
@@ -83,6 +120,15 @@ CREATE TABLE `notes` (
   `id` int NOT NULL,
   `name` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `notes`
+--
+
+INSERT INTO `notes` (`id`, `name`) VALUES
+(1, 'Контрольная работа'),
+(2, 'Самостоятельная работа'),
+(3, 'Проверочная работа');
 
 -- --------------------------------------------------------
 
@@ -116,8 +162,17 @@ CREATE TABLE `schedule` (
   `subject_id` int NOT NULL,
   `class_id` int NOT NULL,
   `cabinet_id` int NOT NULL,
-  `time` time NOT NULL
+  `time` time NOT NULL,
+  `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `schedule`
+--
+
+INSERT INTO `schedule` (`id`, `teacher_id`, `subject_id`, `class_id`, `cabinet_id`, `time`, `date`) VALUES
+(1, 2, 2, 1, 2, '08:00:00', '2023-03-01'),
+(2, 2, 4, 2, 3, '08:50:00', '2023-03-01');
 
 -- --------------------------------------------------------
 
@@ -130,6 +185,16 @@ CREATE TABLE `subjects` (
   `subject_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Дамп данных таблицы `subjects`
+--
+
+INSERT INTO `subjects` (`id`, `subject_name`) VALUES
+(1, 'Математика'),
+(2, 'Русский язык'),
+(3, 'Литература'),
+(4, 'Английский язык');
+
 -- --------------------------------------------------------
 
 --
@@ -138,6 +203,7 @@ CREATE TABLE `subjects` (
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
+  `name` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `login` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `password` varchar(250) NOT NULL,
   `token` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
@@ -148,10 +214,21 @@ CREATE TABLE `users` (
 -- Дамп данных таблицы `users`
 --
 
-INSERT INTO `users` (`id`, `login`, `password`, `token`, `role_id`) VALUES
-(1, 'admin', 'admin', NULL, 1),
-(2, 'teacher', 'teacher', NULL, 2),
-(3, 'student', 'student', NULL, 3);
+INSERT INTO `users` (`id`, `name`, `login`, `password`, `token`, `role_id`) VALUES
+(1, 'Григорий К. А.', 'admin', 'admin', NULL, 1),
+(2, 'Морозова Н. А.', 'teacher', 'teacher', NULL, 2),
+(3, 'Иванов И. И.', 'student0101A', 'student', NULL, 3),
+(4, 'Иванов И. И.', 'student0102A', 'student', NULL, 3),
+(5, 'Иванов И. И.', 'student0103A', 'student', NULL, 3),
+(6, 'Иванов И. И.', 'student0101B', 'student', NULL, 3),
+(7, 'Иванов И. И.', 'student0102B', 'student', NULL, 3),
+(8, 'Иванов И. И.', 'student0103B', 'student', NULL, 3),
+(9, 'Иванов И. И.', 'student0101V', 'student', NULL, 3),
+(10, 'Иванов И. И.', 'student0102V', 'student', NULL, 3),
+(11, 'Иванов И. И.', 'student0103V', 'student', NULL, 3),
+(12, 'Иванов И. И.', 'student0101G', 'student', NULL, 3),
+(13, 'Иванов И. И.', 'student0102G', 'student', NULL, 3),
+(14, 'Иванов И. И.', 'student0103G', 'student', NULL, 3);
 
 --
 -- Индексы сохранённых таблиц
@@ -167,16 +244,15 @@ ALTER TABLE `cabinets`
 -- Индексы таблицы `classes`
 --
 ALTER TABLE `classes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `classes_teachers` (`classroom_teacher_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Индексы таблицы `classes_users`
 --
 ALTER TABLE `classes_users`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `class_id` (`class_id`);
+  ADD KEY `classes_users_users` (`user_id`),
+  ADD KEY `classes_users_classes` (`class_id`);
 
 --
 -- Индексы таблицы `journal`
@@ -230,19 +306,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `cabinets`
 --
 ALTER TABLE `cabinets`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `classes_users`
 --
 ALTER TABLE `classes_users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT для таблицы `journal`
@@ -254,7 +330,7 @@ ALTER TABLE `journal`
 -- AUTO_INCREMENT для таблицы `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `roles`
@@ -266,19 +342,19 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT для таблицы `schedule`
 --
 ALTER TABLE `schedule`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -288,7 +364,8 @@ ALTER TABLE `users`
 -- Ограничения внешнего ключа таблицы `classes_users`
 --
 ALTER TABLE `classes_users`
-  ADD CONSTRAINT `classes_users_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `classes_users_classes` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `classes_users_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `journal`

@@ -14,7 +14,7 @@ class AuthService {
 
   async logout() {
     try {
-      const res = await api.get("/logout");
+      const res = await api.post("/logout");
       TokenService.removeUser();
       return res.data;
     } catch (error) {

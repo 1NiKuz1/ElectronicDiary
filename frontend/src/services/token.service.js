@@ -1,7 +1,7 @@
 class TokenService {
   getToken() {
     const user = JSON.parse(localStorage.getItem("user"));
-    return user?.user_token;
+    return user?.token;
   }
 
   setUser(user) {

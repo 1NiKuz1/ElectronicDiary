@@ -33,10 +33,10 @@ export default {
   padding: 35px 48px 35px 146px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .content-wrapper {
-    padding-left: 0px;
-    padding-bottom: 100px;
+    padding: 10px;
+    padding-bottom: 110px;
   }
 }
 </style>

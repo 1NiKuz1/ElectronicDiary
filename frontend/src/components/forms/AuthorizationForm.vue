@@ -1,25 +1,26 @@
 <template>
   <Form @submit="handleLogin" :validation-schema="schema" class="auth-form">
     <div class="auth-form__content-wrapper">
-      <label for="login">login</label>
-      <Field class="auth-form__form-input" type="text" name="login"></Field>
-      <ErrorMessage name="username" class="auth-form__error" />
+      <label for="login">Логин</label>
+      <Field
+        class="auth-form__form-input p-inputtext p-component"
+        type="text"
+        name="login"
+      ></Field>
+      <ErrorMessage name="login" class="auth-form__error" />
       <label for="password">Пароль</label>
       <Field
-        class="auth-form__form-input"
+        class="auth-form__form-input p-inputtext p-component"
         type="password"
         name="password"
       ></Field>
       <ErrorMessage name="password" class="auth-form__error" />
+      <p class="auth-form__error" v-if="isLogError">
+        Неверно введен логин или пароль
+      </p>
     </div>
     <div class="auth-form__butn-wrapper">
-      <Button
-        :disabled="isLoading"
-        label="Войти"
-        class="auth-form__butn"
-        type="submit"
-      />
-      <!--<button class="auth-form__butn" :disabled="isLoading">Войти</button>-->
+      <Button :disabled="isLoading" label="Войти" type="submit" />
     </div>
   </Form>
 </template>
@@ -52,6 +53,7 @@ export default {
   data() {
     return {
       isLoading: false,
+      isLogError: false,
     };
   },
 
@@ -59,20 +61,21 @@ export default {
     schema() {
       return yup.object({
         login: yup.string().trim().required("Обязательное поле"),
-        password: yup.string().trim().min(8).required("Обязательное поле"),
+        password: yup.string().trim().required("Обязательное поле"),
       });
     },
   },
 
   methods: {
     async handleLogin(values) {
-      console.log(values);
-      this.$emit("hideDialog");
       this.isLoading = true;
+      this.isLogError = false;
       try {
         //User authorization
         await this.login({ login: values.login, password: values.password });
+        this.$emit("hideDialog");
       } catch (error) {
+        this.isLogError = true;
         console.log(error);
       }
       this.isLoading = false;
@@ -101,18 +104,11 @@ export default {
   margin-top: 10px;
 }
 .auth-form__form-input {
-  padding: 2px 10px;
-  border: 1px solid var(--color-light-black);
-  border-radius: 8px;
   margin: 5px 0;
 }
 .auth-form__butn-wrapper {
   display: flex;
   gap: 20px;
   margin-top: 20px;
-}
-
-.auth-form__butn {
-  color: white;
 }
 </style>
