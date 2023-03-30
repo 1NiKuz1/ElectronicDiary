@@ -81,9 +81,9 @@ export default {
   methods: {
     async loadData() {
       if (this.userData.user.role === "teacher")
-        await this.getSheduleForTeacher(this.userData.user.id);
+        await this.getSheduleForTeacher();
       if (this.userData.user.role === "student")
-        await this.getSheduleForStudent(this.userData.user.id);
+        await this.getSheduleForStudent();
     },
   },
 };

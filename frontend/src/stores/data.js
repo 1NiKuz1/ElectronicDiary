@@ -74,20 +74,20 @@ export const useDataStore = defineStore("data", () => {
     }
   }
 
-  async function getSheduleForTeacher(id) {
+  async function getSheduleForTeacher() {
     if (userData.user?.role != "teacher") return;
     try {
-      schedule.value = await ScheduleService.getSheduleForTeacher(id);
+      schedule.value = await ScheduleService.getSheduleForTeacher();
       scheduleСonversion();
     } catch (error) {
       return Promise.reject(error);
     }
   }
 
-  async function getSheduleForStudent(id) {
+  async function getSheduleForStudent() {
     if (userData.user?.role != "student") return;
     try {
-      schedule.value = await ScheduleService.getSheduleForStudent(id);
+      schedule.value = await ScheduleService.getSheduleForStudent();
       scheduleСonversion();
     } catch (error) {
       return Promise.reject(error);

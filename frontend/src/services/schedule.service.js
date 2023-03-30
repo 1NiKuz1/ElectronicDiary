@@ -11,9 +11,9 @@ class ScheduleService {
     }
   }
 
-  async getSheduleForTeacher(id) {
+  async getSheduleForTeacher() {
     try {
-      const res = await api.get("/schedule/teacher", { id });
+      const res = await api.get("/schedule/teacher");
       return res.data;
     } catch (error) {
       console.log(error?.response?.data?.error ?? error);
@@ -21,9 +21,9 @@ class ScheduleService {
     }
   }
 
-  async getSheduleForStudent(id) {
+  async getSheduleForStudent() {
     try {
-      const res = await api.get("/schedule/student", { id });
+      const res = await api.get("/schedule/student");
       return res.data;
     } catch (error) {
       console.log(error?.response?.data?.error ?? error);
