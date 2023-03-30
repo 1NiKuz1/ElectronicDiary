@@ -4,14 +4,17 @@ class SheduleModel {
   getShedule() {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT schedule.id, schedule.time, cabinets.num_cabinet, subjects.subject_name, users.name, schedule.date
+        `SELECT schedule.id, schedule.time, cabinets.num_cabinet, subjects.subject_name, users.name, schedule.date, classes.name as class_name
         FROM schedule 
         inner join cabinets 
         on schedule.cabinet_id = cabinets.id
         inner join subjects 
         on schedule.subject_id = subjects.id
         inner join users 
-        on schedule.teacher_id = users.id`,
+        on schedule.teacher_id = users.id
+        inner join classes 
+        on schedule.class_id = classes.id
+        order by schedule.date, schedule.time`,
         (err, results) => {
           if (err) {
             console.log(err);
@@ -27,7 +30,7 @@ class SheduleModel {
   getSheduleForTeacher(id) {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT schedule.id, schedule.time, cabinets.num_cabinet, subjects.subject_name, users.name, schedule.date
+        `SELECT schedule.id, schedule.time, cabinets.num_cabinet, subjects.subject_name, users.name, schedule.date, classes.name as class_name
         FROM schedule 
         inner join cabinets 
         on schedule.cabinet_id = cabinets.id
@@ -35,7 +38,10 @@ class SheduleModel {
         on schedule.subject_id = subjects.id
         inner join users 
         on schedule.teacher_id = users.id
-        WHERE teacher_id = ?`,
+        inner join classes 
+        on schedule.class_id = classes.id
+        WHERE teacher_id = ?
+        order by schedule.date, schedule.time`,
         [id],
         (err, results) => {
           if (err) {
@@ -60,7 +66,8 @@ class SheduleModel {
         on schedule.subject_id = subjects.id
         inner join users 
         on schedule.teacher_id = users.id
-        WHERE class_id = ?`,
+        WHERE class_id = ?
+        order by schedule.date, schedule.time`,
         [id],
         (err, results) => {
           if (err) {

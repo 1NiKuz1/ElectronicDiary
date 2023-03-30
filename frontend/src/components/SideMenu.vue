@@ -55,6 +55,7 @@
 import Dialog from "primevue/dialog";
 import AuthorizationForm from "@/components/forms/AuthorizationForm.vue";
 import { useAuthStore } from "@/stores/auth";
+import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 export default {
   name: "side-menu",
@@ -65,6 +66,7 @@ export default {
 
   setup() {
     const auth = useAuthStore();
+    const data = useDataStore();
     const { userData } = auth;
     const { isLogged } = storeToRefs(auth);
     const { logout } = auth;
@@ -72,6 +74,7 @@ export default {
       userData,
       isLogged,
       logout,
+      data,
     };
   },
 
@@ -82,8 +85,9 @@ export default {
   },
 
   methods: {
-    logout() {
-      this.logout();
+    async logout() {
+      await this.logout();
+      this.data.$reset();
       this.$router.push("/");
     },
 

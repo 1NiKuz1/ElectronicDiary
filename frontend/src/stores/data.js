@@ -1,111 +1,106 @@
 import { ref, computed, reactive, readonly } from "vue";
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth";
-import UserService from "@/services/user.service.js";
-import WorkShiftService from "@/services/workshift.service.js";
-import OrderService from "@/services/order.service.js";
+import ScheduleService from "@/services/schedule.service.js";
+import JournalService from "@/services/journal.service.js";
 
 export const useDataStore = defineStore("data", () => {
   const auth = useAuthStore();
   const { userData } = auth;
   //API data collection
-  const employees = ref([]);
-  const shifts = ref([]);
-  const orders = ref([]);
-  const ordersForCook = ref([]);
-  const tables = ref([]);
-  const menu = ref([]);
-
-  const selectedShift = ref({});
+  const schedule = ref([]);
+  const journal = ref([]);
 
   function $reset() {
-    employees.value = [];
-    shifts.value = [];
-    orders.value = [];
-    ordersForCook.value = [];
-    tables.value = [];
-    menu.value = [];
-    selectedShift.value = {};
+    schedule.value = [];
+    journal.value = [];
   }
 
-  async function getUsers() {
-    if (userData.user?.role != "Администратор") return;
+  function getDayOfWeek(day) {
+    switch (day) {
+      case 0:
+        return "Воскресенье";
+      case 1:
+        return "Понедельник";
+      case 2:
+        return "Вторник";
+      case 3:
+        return "Среда";
+      case 4:
+        return "Четверг";
+      case 5:
+        return "Пятница";
+      case 6:
+        return "Суббота";
+    }
+  }
+
+  function dateСonversion(oldDate) {
+    let date = new Date(oldDate);
+    let newDate = `${
+      date.getDate() < 10 ? "0" + date.getDate() : date.getDate()
+    }.${
+      date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth()
+    }.${date.getFullYear()} ${getDayOfWeek(date.getDay())}`;
+    return newDate;
+  }
+
+  function scheduleСonversion() {
+    schedule.value.forEach((el) => {
+      el.time = el.time.split("").splice(0, 5).join("");
+      el.date = dateСonversion(el.date);
+    });
+  }
+
+  async function getStudentDiary() {
+    if (userData.user?.role != "student") return;
     try {
-      employees.value = await UserService.getUsers();
+      journal.value = await JournalService.getStudentDiary();
+      journal.value.forEach((el) => {
+        el.date = dateСonversion(el.date);
+      });
     } catch (error) {
       return Promise.reject(error);
     }
   }
 
-  async function getWorkShifts() {
-    if (
-      userData.user?.role != "Администратор" &&
-      userData.user?.role != "Официант"
-    )
-      return;
+  async function getSheduleForAdmin() {
+    if (userData.user?.role != "admin") return;
     try {
-      shifts.value = await WorkShiftService.showAllWorkShifts();
+      schedule.value = await ScheduleService.getSheduleForAdmin();
+      scheduleСonversion();
     } catch (error) {
       return Promise.reject(error);
     }
   }
 
-  async function getOrdersById(id) {
-    if (
-      userData.user?.role != "Администратор" &&
-      userData.user?.role != "Официант"
-    )
-      return;
+  async function getSheduleForTeacher(id) {
+    if (userData.user?.role != "teacher") return;
     try {
-      const res = await WorkShiftService.showOrderByWorkShift(id);
-      orders.value = res[0].orders;
+      schedule.value = await ScheduleService.getSheduleForTeacher(id);
+      scheduleСonversion();
     } catch (error) {
       return Promise.reject(error);
     }
   }
 
-  async function getOrdersForCook() {
-    if (userData.user?.role != "Повар") return;
+  async function getSheduleForStudent(id) {
+    if (userData.user?.role != "student") return;
     try {
-      const orders = await OrderService.currentOrders();
-      ordersForCook.value = orders.details;
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  }
-
-  async function getTables() {
-    if (userData.user?.role != "Официант") return;
-    try {
-      tables.value = await WorkShiftService.getTables();
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  }
-
-  async function getMenu() {
-    if (userData.user?.role != "Официант") return;
-    try {
-      menu.value = await WorkShiftService.getMenu();
+      schedule.value = await ScheduleService.getSheduleForStudent(id);
+      scheduleСonversion();
     } catch (error) {
       return Promise.reject(error);
     }
   }
 
   return {
-    employees,
-    shifts,
-    orders,
-    ordersForCook,
-    tables,
-    menu,
-    selectedShift,
+    schedule,
+    journal,
+    getSheduleForAdmin,
+    getSheduleForTeacher,
+    getSheduleForStudent,
+    getStudentDiary,
     $reset,
-    getUsers,
-    getWorkShifts,
-    getOrdersById,
-    getOrdersForCook,
-    getTables,
-    getMenu,
   };
 });

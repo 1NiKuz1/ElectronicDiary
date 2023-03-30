@@ -4,13 +4,18 @@ const ApiError = require("../exceptions/api-error");
 const ROLES = ["admin", "teacher", "student"];
 
 class AuthToken {
-  verifyToken = (req, res, next) => {
+  verifyToken = async (req, res, next) => {
     try {
-      const token = req.headers["Authorization"];
-
+      const token = req.headers["authorization"].replace("Bearer ", "");
       if (!token) {
         return next(ApiError.Error(403, "No token provided!"));
       }
+      const user = await userModel.findUserByExtend("token", token);
+      if (!user) {
+        return next(ApiError.Error(403, "Unauthorized"));
+      }
+      req.user = user;
+      next();
     } catch (err) {
       next(ApiError.BadRequest(500, "invalid database request", err));
     }
@@ -18,9 +23,8 @@ class AuthToken {
 
   #verifyRole = async (req, res, next) => {
     try {
-      const user = await userModel.findUserByExtend("id", req.id);
-      const role = await roleModel.getRole(user.role_id);
-      if (role.name !== req.role) {
+      const role = await roleModel.getRole(req.user.role_id);
+      if (role !== req.role) {
         return next(ApiError.Error(403, `Require ${req.role} role`));
       }
       next();

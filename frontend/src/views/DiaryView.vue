@@ -1,22 +1,21 @@
 <template>
   <div>
     <DataTable
-      :value="items"
+      :value="journal"
       rowGroupMode="subheader"
-      groupRowsBy="subject"
+      groupRowsBy="subject_name"
       scrollable
       scrollHeight="90vh"
       resizable-columns
     >
-      <Column field="subject" header="subject" resizable />
-      <Column field="time" header="Время" resizable />
+      <Column field="subject_name" header="subject_name" resizable />
       <Column field="date" header="Дата" resizable />
-      <Column field="note" header="Примечание" resizable />
-      <Column field="teacher" header="Проподаватель" resizable />
-      <Column field="mark" header="Оценка" resizable />
+      <Column field="note_name" header="Примечание" resizable />
+      <Column field="name" header="Проподаватель" resizable />
+      <Column field="rating" header="Оценка" resizable />
       <template #groupheader="slotProps">
         <div class="flex align-items-center gap-2">
-          <span>{{ slotProps.data.subject }}</span>
+          <span>{{ slotProps.data.subject_name }}</span>
         </div>
       </template>
     </DataTable>
@@ -29,8 +28,9 @@ import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup"; // optional
 import Row from "primevue/row"; // optional
 import InputText from "primevue/inputtext";
-import "primevue/resources/themes/saga-blue/theme.css";
-import "primevue/resources/primevue.min.css";
+import { useAuthStore } from "@/stores/auth";
+import { useDataStore } from "@/stores/data";
+import { storeToRefs } from "pinia";
 
 export default {
   name: "DiaryView",
@@ -41,110 +41,33 @@ export default {
     Row,
     InputText,
   },
-  data() {
+
+  setup() {
+    const auth = useAuthStore();
+    const data = useDataStore();
+    const { userData } = auth;
+    const { journal } = storeToRefs(data);
+    const { getStudentDiary } = data;
     return {
-      items: [
-        {
-          id: 1,
-          time: "12:50",
-          subject: "Математика",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-        {
-          id: 2,
-          time: "12:50",
-          subject: "Математика",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-        {
-          id: 3,
-          time: "12:50",
-          subject: "Математика",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-        {
-          id: 4,
-          time: "12:50",
-          subject: "Математика",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-        {
-          id: 5,
-          time: "12:50",
-          subject: "Математика",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-        {
-          id: 6,
-          time: "12:50",
-          subject: "Русский язык",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-        {
-          id: 7,
-          time: "12:50",
-          subject: "Русский язык",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-        {
-          id: 8,
-          time: "12:50",
-          subject: "Русский язык",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-        {
-          id: 9,
-          time: "12:50",
-          subject: "Русский язык",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-        {
-          id: 10,
-          time: "12:50",
-          subject: "Русский язык",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-        {
-          id: 11,
-          time: "12:50",
-          subject: "Русский язык",
-          note: "Самостоятельная работа",
-          teacher: "Морозова И А",
-          mark: "5",
-          date: "21.01.2023",
-        },
-      ],
+      userData,
+      journal,
+      getStudentDiary,
     };
+  },
+
+  mounted() {
+    if (this.userData.user.role !== "student") {
+      this.$router.push("/");
+      return;
+    }
+    if (!this.journal.length) this.loadData();
+  },
+
+  methods: {
+    async loadData() {
+      if (this.userData.user.role === "student") await this.getStudentDiary();
+      console.log(this.journal);
+    },
   },
 };
 </script>

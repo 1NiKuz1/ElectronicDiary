@@ -14,11 +14,11 @@ class RoleModel {
     });
   }
 
-  getRole(data) {
+  getRole(id) {
     return new Promise((resolve, reject) => {
       db.query(
         `SELECT role_name from roles WHERE id = ?`,
-        [data],
+        [id],
         (err, results) => {
           if (err) {
             console.log(err);

@@ -1,7 +1,7 @@
 <template>
   <div>
     <DataTable
-      :value="items"
+      :value="schedule"
       rowGroupMode="subheader"
       groupRowsBy="date"
       scrollable
@@ -10,9 +10,20 @@
     >
       <Column field="date" header="date" resizable />
       <Column field="time" header="Время" resizable />
-      <Column field="subject" header="Предмет" resizable />
-      <Column field="teacher" header="Проподаватель" resizable />
-      <Column field="room" header="Кабинет" resizable />
+      <Column field="subject_name" header="Предмет" resizable />
+      <Column
+        v-if="userData.user.role == 'student'"
+        field="name"
+        header="Проподаватель"
+        resizable
+      />
+      <Column
+        v-if="userData.user.role == 'teacher'"
+        field="class_name"
+        header="Класс"
+        resizable
+      />
+      <Column field="num_cabinet" header="Кабинет" resizable />
       <template #groupheader="slotProps">
         <div class="flex align-items-center gap-2">
           <span>{{ slotProps.data.date }}</span>
@@ -28,8 +39,9 @@ import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup"; // optional
 import Row from "primevue/row"; // optional
 import InputText from "primevue/inputtext";
-import "primevue/resources/themes/saga-blue/theme.css";
-import "primevue/resources/primevue.min.css";
+import { useAuthStore } from "@/stores/auth";
+import { useDataStore } from "@/stores/data";
+import { storeToRefs } from "pinia";
 
 export default {
   name: "ScheduleView",
@@ -40,19 +52,39 @@ export default {
     Row,
     InputText,
   },
-  data() {
+
+  setup() {
+    const auth = useAuthStore();
+    const data = useDataStore();
+    const { userData } = auth;
+    const { schedule } = storeToRefs(data);
+    const { getSheduleForTeacher, getSheduleForStudent } = data;
     return {
-      items: [
-        {
-          id: 1,
-          time: "12:50",
-          subject: "Математика",
-          teacher: "Морозова И А",
-          room: "42",
-          date: "21.01.2023 – Суббота",
-        },
-      ],
+      userData,
+      schedule,
+      getSheduleForTeacher,
+      getSheduleForStudent,
     };
+  },
+
+  mounted() {
+    if (
+      this.userData.user.role !== "teacher" &&
+      this.userData.user.role !== "student"
+    ) {
+      this.$router.push("/");
+      return;
+    }
+    if (!this.schedule.length) this.loadData();
+  },
+
+  methods: {
+    async loadData() {
+      if (this.userData.user.role === "teacher")
+        await this.getSheduleForTeacher(this.userData.user.id);
+      if (this.userData.user.role === "student")
+        await this.getSheduleForStudent(this.userData.user.id);
+    },
   },
 };
 </script>

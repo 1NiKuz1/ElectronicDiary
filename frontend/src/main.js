@@ -8,6 +8,8 @@ import router from "./router";
 import "primevue/resources/themes/lara-light-indigo/theme.css"; //theme
 import "primevue/resources/primevue.min.css"; //core
 import "primeicons/primeicons.css"; //icons
+import "primevue/resources/themes/saga-blue/theme.css";
+import "primevue/resources/primevue.min.css";
 
 import "./assets/main.css";
 
